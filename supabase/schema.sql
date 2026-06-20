@@ -24,10 +24,22 @@ create table if not exists conversations (
   lead_name text,
   lead_phone text,
   preferred_time text,
+  patient_type text,        -- 'new' / 'existing' / null (unresolved)
+  reason_for_visit text,    -- 'routine_cleaning' / 'pain_emergency' / 'cosmetic' / 'pricing' / 'browsing' / null
+  referral_source text,     -- 'search' / 'referral' / 'social_media' / 'ad' / 'other' / null
+  request_type text check (request_type in ('booking', 'callback_request', 'general_inquiry')),
   transcript jsonb default '[]',
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+-- Idempotent for already-deployed projects: create table if not exists above won't add columns
+-- to a table that already exists, so add them explicitly too.
+alter table conversations add column if not exists patient_type text;
+alter table conversations add column if not exists reason_for_visit text;
+alter table conversations add column if not exists referral_source text;
+alter table conversations add column if not exists request_type text
+  check (request_type in ('booking', 'callback_request', 'general_inquiry'));
 
 -- keep updated_at fresh on every row update
 create or replace function set_updated_at() returns trigger as $$
