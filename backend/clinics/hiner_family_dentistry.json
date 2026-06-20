@@ -1,0 +1,30 @@
+{
+  "practice_name": "Hiner Family Dentistry",
+  "doctors": ["Dr. Matthew Hiner, DDS", "Dr. Reagan Hiner, DDS (husband and wife)"],
+  "address": "8811 Frankway Dr, Suite D, Houston, TX 77096",
+  "phone": "(713) 667-6478",
+  "hours": "Monday-Thursday, 8:00 AM - 4:00 PM. Closed Friday-Sunday. Same-day/extended-hours appointments available by calling.",
+  "booking_note": "Online scheduler available, or call directly. No AI chatbot or 24/7 booking currently exists on their site.",
+  "services": [
+    "Preventive care: checkups & cleanings",
+    "Children's dentistry (family-friendly, all ages)",
+    "Gum disease treatment",
+    "Restorative: crowns, fillings",
+    "Missing teeth solutions: bridges, dental implants, dentures",
+    "Cosmetic dentistry: veneers, Botox, teeth whitening",
+    "Orthodontics",
+    "Emergency dentistry (pain/urgent issues)",
+    "Wisdom teeth removal"
+  ],
+  "insurance_and_financing": [
+    "Accepts many dental insurance plans",
+    "In-house membership plans for uninsured patients",
+    "Low-to-no interest financing available"
+  ],
+  "affiliations": ["American Dental Association (ADA)", "American Academy of Cosmetic Dentistry (AACD)", "Texas Dental Association"],
+  "social": {
+    "facebook": "facebook.com/HinerDentistry",
+    "instagram": "instagram.com/hinerfamilydentistry"
+  },
+  "system_prompt_extra": "If the user mentions pain, an emergency, or urgent issue, tell them to call (713) 667-6478 directly, and still collect their name and phone number so the team can follow up first thing when the office opens if it's after hours. Always offer to collect name, phone, and preferred appointment time for any booking request, and tell them the team will confirm by phone."
+}

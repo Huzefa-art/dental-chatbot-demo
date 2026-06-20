@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dental Demo Chatbot</title>
+<script src="config.js"></script>
+<style>
+  body { font-family: -apple-system, Arial, sans-serif; background: #f3f4f6; margin: 0; padding: 24px; }
+  #chat-box { max-width: 420px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; }
+  #header { background: #1F2D50; color: #fff; padding: 14px 18px; font-weight: 600; }
+  #messages { height: 420px; overflow-y: auto; padding: 16px; }
+  .msg { margin-bottom: 12px; line-height: 1.4; }
+  .user { text-align: right; }
+  .user .bubble { background: #2E75B6; color: #fff; display: inline-block; padding: 8px 12px; border-radius: 12px; max-width: 80%; }
+  .bot .bubble { background: #eef1f5; color: #1a1a1a; display: inline-block; padding: 8px 12px; border-radius: 12px; max-width: 80%; }
+  #input-row { display: flex; border-top: 1px solid #eee; }
+  #input-row input { flex: 1; border: none; padding: 12px; font-size: 14px; outline: none; }
+  #input-row button { border: none; background: #2E75B6; color: #fff; padding: 0 18px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="chat-box">
+  <div id="header">Hiner Family Dentistry — Virtual Assistant</div>
+  <div id="messages"></div>
+  <div id="input-row">
+    <input id="input" type="text" placeholder="Ask about hours, services, booking..." />
+    <button onclick="send()">Send</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = `${window.API_BASE_URL}/chat?clinic=${window.CLINIC_SLUG}`;
+  const sessionId = "demo-" + Math.random().toString(36).slice(2);
+  let history = [];
+  const messagesEl = document.getElementById("messages");
+  const inputEl = document.getElementById("input");
+
+  function addMsg(role, text) {
+    const div = document.createElement("div");
+    div.className = "msg " + (role === "user" ? "user" : "bot");
+    div.innerHTML = `<span class="bubble">${text}</span>`;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  async function send() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    addMsg("user", text);
+    inputEl.value = "";
+    history.push({ role: "user", content: text });
+
+    // Render free tier sleeps after 15 min idle -- first request after a while can take
+    // 30-60s to wake up. Tell the user that instead of letting it look broken.
+    const wakingNote = addMsg("bot", "<em>Connecting to the assistant... (may take up to a minute if it's been idle)</em>");
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, history: history.slice(0, -1), session_id: sessionId }),
+      });
+      const data = await res.json();
+      wakingNote.remove();
+      addMsg("bot", data.reply || "(error: " + (data.detail || "unknown") + ")");
+      history.push({ role: "assistant", content: data.reply || "" });
+    } catch (err) {
+      wakingNote.remove();
+      addMsg("bot", "Sorry, I couldn't reach the assistant just now. Please try again in a moment.");
+    }
+  }
+
+  inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+  addMsg("bot", "Hi! I'm the virtual assistant for Hiner Family Dentistry. Ask me about hours, services, insurance, or to request an appointment.");
+</script>
+</body>
+</html>
