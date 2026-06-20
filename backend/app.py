@@ -118,26 +118,92 @@ BEHAVIOR RULES:
 - If asked something you don't have info on, say you'll have the team follow up -- never guess.
 - Keep replies short (2-4 sentences) unless listing services.
 - For any booking interest, collect name, phone number, and preferred day/time before ending the conversation.
+
+LEAD QUALIFICATION (do this naturally, inside the conversation -- never show a form or a list of questions):
+- Within the first couple of exchanges, try to infer whether they're a new or existing patient, and
+  why they're reaching out (routine cleaning, pain/emergency, cosmetic interest, pricing/insurance
+  question, or just browsing). Infer this from what they say rather than interrogating them -- only
+  ask directly if it's genuinely unclear after a turn or two.
+- Near the end of the conversation (once their main question is answered, or a booking/callback is
+  set up), casually ask how they heard about the practice (search engine, a friend's referral, social
+  media, or an ad). Keep it light, e.g. "One quick thing before you go -- how'd you find us?"
+- If you can't resolve something yourself (a complex insurance question, or they explicitly want to
+  talk to a human), offer to take their name and phone number for a callback -- this is separate from
+  a booking request; don't conflate the two.
 """
 
 
-def log_conversation(clinic_slug: str, session_id: str, message: str, reply: str):
-    """Best-effort lead/conversation capture. Never breaks the chat if logging fails."""
+EXTRACTION_SYSTEM_PROMPT = """You extract structured lead data from a dental clinic chatbot conversation.
+Read the transcript and return ONLY a JSON object (no prose, no markdown fences) with these keys:
+
+- patient_type: one of "new", "existing", or null if unresolved
+- reason_for_visit: one of "routine_cleaning", "pain_emergency", "cosmetic", "pricing", "browsing", or null
+- referral_source: one of "search", "referral", "social_media", "ad", "other", or null
+- request_type: one of "booking", "callback_request", "general_inquiry", or null
+- lead_name: the patient's name if they gave one, else null
+- lead_phone: the patient's phone number if they gave one, else null
+- preferred_time: their preferred appointment day/time if mentioned, else null
+
+Use null for anything not clearly stated or implied in the transcript -- never guess or invent values.
+"""
+
+
+def extract_lead_fields(client: "OpenAI", transcript: list) -> dict:
+    """Best-effort structured extraction from the running transcript. Never breaks the chat."""
+    empty = {
+        "patient_type": None, "reason_for_visit": None, "referral_source": None,
+        "request_type": None, "lead_name": None, "lead_phone": None, "preferred_time": None,
+    }
+    try:
+        convo_text = "\n".join(f"{t['role']}: {t['content']}" for t in transcript)
+        response = client.chat.completions.create(
+            model=MODEL,
+            max_tokens=300,
+            temperature=0,
+            messages=[
+                {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+                {"role": "user", "content": convo_text},
+            ],
+        )
+        raw = response.choices[0].message.content.strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        parsed = json.loads(raw)
+        empty.update({k: parsed.get(k) for k in empty if parsed.get(k)})
+        return empty
+    except Exception as e:
+        print(f"[warn] lead field extraction failed: {e}")
+        return empty
+
+
+FIELD_COLUMNS = ["patient_type", "reason_for_visit", "referral_source", "request_type",
+                  "lead_name", "lead_phone", "preferred_time"]
+
+
+def log_conversation(client: "OpenAI", clinic_slug: str, session_id: str, message: str, reply: str):
+    """Best-effort lead/conversation capture + structured field extraction. Never breaks the chat if it fails."""
     sb = get_supabase()
     if not sb:
         return
     try:
-        existing = sb.table("conversations").select("id, transcript").eq("session_id", session_id).limit(1).execute()
+        select_cols = "id, transcript, " + ", ".join(FIELD_COLUMNS)
+        existing = sb.table("conversations").select(select_cols) \
+            .eq("session_id", session_id).limit(1).execute()
         new_turn = [{"role": "user", "content": message}, {"role": "assistant", "content": reply}]
+        prior_row = existing.data[0] if existing.data else {}
+        transcript = (prior_row.get("transcript") or []) + new_turn
+
+        extracted = extract_lead_fields(client, transcript)
+        # Never let a later "unresolved" extraction erase a field we already captured.
+        fields = {k: (extracted.get(k) or prior_row.get(k)) for k in FIELD_COLUMNS}
+
         if existing.data:
-            transcript = existing.data[0]["transcript"] or []
-            transcript.extend(new_turn)
-            sb.table("conversations").update({"transcript": transcript}).eq("session_id", session_id).execute()
+            sb.table("conversations").update({"transcript": transcript, **fields}).eq("session_id", session_id).execute()
         else:
             sb.table("conversations").insert({
                 "session_id": session_id,
                 "clinic_slug": clinic_slug,
                 "transcript": new_turn,
+                **fields,
             }).execute()
     except Exception as e:
         print(f"[warn] conversation logging failed: {e}")
@@ -176,7 +242,7 @@ def chat(req: ChatRequest, clinic: str = Query(..., description="clinic slug, e.
     reply = response.choices[0].message.content
 
     session_id = req.session_id or str(uuid.uuid4())
-    log_conversation(clinic, session_id, req.message, reply)
+    log_conversation(client, clinic, session_id, req.message, reply)
 
     return {"reply": reply, "session_id": session_id}
 
