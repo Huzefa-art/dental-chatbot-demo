@@ -3,3 +3,14 @@ uvicorn==0.30.6
 openai==1.51.0
 supabase==2.9.1
 pydantic==2.9.2
+# Pinned explicitly: supabase==2.9.1 doesn't pin these itself, so pip can resolve different
+# transitive versions on a fresh Render build than whatever happened to get resolved during
+# local testing -- and this library family (gotrue/postgrest/httpx) has a history of breaking
+# on version mismatches (e.g. an httpx arg rename breaking client construction). Pinning these
+# removes that "works locally, fails on Render" class of bug entirely.
+gotrue==2.12.4
+postgrest==0.17.2
+realtime==2.5.3
+storage3==0.8.2
+supafunc==0.6.2
+httpx==0.27.2

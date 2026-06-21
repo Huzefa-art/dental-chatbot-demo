@@ -38,11 +38,17 @@ try:
 except ImportError:
     OpenAI = None
 
+SUPABASE_IMPORT_ERROR = None
 try:
     from supabase import create_client, Client as SupabaseClient
-except ImportError:
+except ImportError as e:
     create_client = None
     SupabaseClient = None
+    # Don't swallow this silently -- if the package fails to import on Render (e.g. a pinned
+    # version mismatch in gotrue/postgrest/httpx), this used to just show up as
+    # supabase_connected: false with zero explanation. Surfaced via /health below.
+    SUPABASE_IMPORT_ERROR = f"{type(e).__name__}: {e}"
+    print(f"[warn] supabase import failed: {SUPABASE_IMPORT_ERROR}")
 
 CLINICS_DIR = Path(__file__).parent / "clinics"
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
@@ -63,12 +69,38 @@ app.add_middleware(
 )
 
 
+# Populated by get_supabase() every call -- not cached at import time, so this always reflects
+# the env vars actually present right now, even if they were added after the process started.
+# Read it from /health to see the REAL reason supabase_connected is false instead of guessing.
+SUPABASE_DEBUG = {
+    "import_error": SUPABASE_IMPORT_ERROR,
+    "env_vars_present": None,
+    "client_error": None,
+}
+
+
 def get_supabase() -> Optional["SupabaseClient"]:
     url = os.environ.get("SUPABASE_URL")
     key = os.environ.get("SUPABASE_KEY")
-    if not (url and key and create_client):
+    SUPABASE_DEBUG["env_vars_present"] = bool(url and key)
+
+    if create_client is None:
+        SUPABASE_DEBUG["client_error"] = "supabase package failed to import -- see import_error"
         return None
-    return create_client(url, key)
+    if not (url and key):
+        SUPABASE_DEBUG["client_error"] = "SUPABASE_URL or SUPABASE_KEY not set in this process's environment"
+        return None
+    try:
+        client = create_client(url, key)
+        SUPABASE_DEBUG["client_error"] = None
+        return client
+    except Exception as e:
+        # create_client() can raise (bad key format, incompatible library versions, etc.) --
+        # previously there was no try/except here at all, so any real failure was silently
+        # swallowed into a bare False with no way to tell why.
+        SUPABASE_DEBUG["client_error"] = f"{type(e).__name__}: {e}"
+        print(f"[warn] supabase client construction failed: {SUPABASE_DEBUG['client_error']}")
+        return None
 
 
 class ChatMessage(BaseModel):
@@ -249,7 +281,23 @@ def chat(req: ChatRequest, clinic: str = Query(..., description="clinic slug, e.
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "supabase_connected": get_supabase() is not None}
+    sb = get_supabase()
+    debug = dict(SUPABASE_DEBUG)
+    query_ok = False
+    if sb is not None:
+        # Constructing a client object never made a network call -- this is the first point
+        # that actually proves the URL/key are correct and Supabase is reachable. Without this,
+        # "supabase_connected: true" could mean nothing more than "a client object exists."
+        try:
+            sb.table("clinics").select("slug").limit(1).execute()
+            query_ok = True
+        except Exception as e:
+            debug["query_error"] = f"{type(e).__name__}: {e}"
+    return {
+        "status": "ok",
+        "supabase_connected": query_ok,
+        "supabase_debug": debug,
+    }
 
 
 if __name__ == "__main__":
