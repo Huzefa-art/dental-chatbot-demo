@@ -1,0 +1,35 @@
+{
+  "slug": "dental_defenders_houston",
+  "practice_name": "Dental Defenders",
+  "doctors": ["Dental Defenders Houston Team"],
+  "address": "5341 Antoine Dr, Houston, TX 77091",
+  "phone": "(713) 999-6777",
+  "hours": "Saturday 10:00 AM - 3:00 PM. Sunday closed. Monday 2:00 PM - 7:00 PM. Tuesday-Thursday 11:00 AM - 7:00 PM. Friday 11:00 AM - 6:00 PM.",
+  "booking_note": "Currently booked via an external Typeform link and a basic contact form -- no live chat or AI booking exists today.",
+  "services": [
+    "General & cosmetic dentistry",
+    "Cleanings & checkups",
+    "Fillings",
+    "Crowns & bridges",
+    "Teeth whitening",
+    "Invisalign / clear aligners",
+    "Dental implants",
+    "Dentures & partials",
+    "Root canals",
+    "Extractions",
+    "Pediatric dentistry",
+    "Emergency dental care"
+  ],
+  "insurance_and_financing": [
+    "Medicaid",
+    "CHIP",
+    "Most PPO insurance plans",
+    "Cash / credit",
+    "Financing available for uninsured patients"
+  ],
+  "affiliations": [],
+  "social": {
+    "facebook": "facebook.com/Dental-Defenders-Houston-100222782675965"
+  },
+  "system_prompt_extra": "This is a fun, superhero-themed practice (Marvel/DC decor, arcade in the lobby) that serves a lot of Medicaid/CHIP families -- keep the tone warm and a little playful, not corporate. If asked about emergencies, tell them to call (713) 999-6777 directly and still collect name and phone so the team can follow up, especially since they're closed Sundays and don't open until 2pm Mondays."
+}
