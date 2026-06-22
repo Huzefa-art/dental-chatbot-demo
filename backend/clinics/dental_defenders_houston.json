@@ -1,0 +1,32 @@
+{
+  "practice_name": "Dental Defenders Family Dentistry",
+  "doctors": ["Dental Defenders dental team — general & pediatric dentists on staff (individual provider names not published by the practice)"],
+  "address": "5341 Antoine Dr, Houston, TX 77091",
+  "phone": "(713) 999-6777",
+  "hours": "Monday 2:00 PM - 7:00 PM. Tuesday-Thursday 11:00 AM - 7:00 PM. Friday 11:00 AM - 6:00 PM. Saturday 10:00 AM - 3:00 PM. Closed Sunday.",
+  "booking_note": "Call the office directly to schedule. Mention if it's a dental emergency so the front desk can prioritize same-day care.",
+  "services": [
+    "Pediatric dental care (ages 6 months and up)",
+    "Adult & family dentistry",
+    "Preventive care: checkups & cleanings",
+    "Restorative: fillings, crowns, bridges",
+    "Cosmetic: professional teeth whitening",
+    "Orthodontics: Invisalign, braces, clear aligner therapy",
+    "Tooth replacement: dental implants, partial & full dentures",
+    "Root canals",
+    "Oral surgery & tooth extractions",
+    "Emergency dental care",
+    "Sedation dentistry options"
+  ],
+  "insurance_and_financing": [
+    "Accepts Medicaid and CHIP",
+    "Accepts most PPO dental insurance plans",
+    "Cash and credit cards accepted",
+    "Special financing options available for uninsured patients, including emergency care"
+  ],
+  "social": {
+    "facebook": "facebook.com/DentalDefendersHouston",
+    "instagram": "instagram.com/dentaldefenders"
+  },
+  "system_prompt_extra": "This practice has a fun, superhero-themed atmosphere (tagline: \"Defending Smiles, One Tooth at a Time!\") with arcade games and TVs in the waiting room, especially geared toward putting kids at ease -- you can reflect a friendly, upbeat tone without being silly or unprofessional. If the user mentions pain, an emergency, or urgent issue, tell them to call (713) 999-6777 directly, and still collect their name and phone number so the team can follow up first thing when the office opens if it's after hours. Always offer to collect name, phone, and preferred appointment time for any booking request, and tell them the team will confirm by phone."
+}
