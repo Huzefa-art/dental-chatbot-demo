@@ -1,0 +1,29 @@
+{
+  "slug": "the_dental_studio_miami",
+  "practice_name": "The Dental Studio Miami",
+  "doctors": [
+    "Dr. Maribel Carbia, DMD"
+  ],
+  "address": "4100 Salzedo St #20, Coral Gables, FL 33146",
+  "phone": "(305) 666-0006",
+  "hours": "Mon-Fri 8am-5pm. Closed weekends. No online self-scheduling -- phone or an outbound Zocdoc link only.",
+  "booking_note": "Mon-Fri 8am-5pm. Closed weekends. No online self-scheduling -- phone or an outbound Zocdoc link only.",
+  "services": [
+    "General & preventive dentistry",
+    "Endodontics",
+    "Cosmetic dentistry (veneers, whitening)",
+    "Invisalign / clear braces",
+    "Dental implants",
+    "Periodontics",
+    "Emergency care"
+  ],
+  "insurance_and_financing": [
+    "Most major dental insurance plans",
+    "CareCredit",
+    "Cash/credit cards",
+    "In-house payment plan"
+  ],
+  "affiliations": [],
+  "social": {},
+  "system_prompt_extra": "If asked about emergencies, tell them to call (305) 666-0006 directly and still collect name and phone so the team can follow up. Be especially clear about hours since this practice has limited availability: Mon-Fri 8am-5pm. Closed weekends. No online self-scheduling -- phone or an outbound Zocdoc link only."
+}

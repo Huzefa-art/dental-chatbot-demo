@@ -1,0 +1,30 @@
+{
+  "slug": "north_miami_dental",
+  "practice_name": "North Miami Dental",
+  "doctors": [
+    "Dr. Michael Marrocco, DMD"
+  ],
+  "address": "610 NE 124th St, North Miami, FL 33161",
+  "phone": "(305) 893-5433",
+  "hours": "Mon-Thu 7:30am-5pm. Fri 7:30am-1pm. Closed Sat & Sun entirely.",
+  "booking_note": "Mon-Thu 7:30am-5pm. Fri 7:30am-1pm. Closed Sat & Sun entirely.",
+  "services": [
+    "Implants",
+    "Crowns & bridges",
+    "Veneers",
+    "Cosmetic dentistry",
+    "General & preventive care",
+    "Oral surgery",
+    "Periodontics",
+    "Mouth reconstruction"
+  ],
+  "insurance_and_financing": [
+    "CareCredit",
+    "Evenly financing",
+    "Major credit cards",
+    "Cash"
+  ],
+  "affiliations": [],
+  "social": {},
+  "system_prompt_extra": "If asked about emergencies, tell them to call (305) 893-5433 directly and still collect name and phone so the team can follow up. Be especially clear about hours since this practice has limited availability: Mon-Thu 7:30am-5pm. Fri 7:30am-1pm. Closed Sat & Sun entirely."
+}

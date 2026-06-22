@@ -1,0 +1,30 @@
+{
+  "slug": "galaxia_dental_dallas",
+  "practice_name": "Galaxia Dental",
+  "doctors": [
+    "Dr. Patrice Griffith, DMD",
+    "Dr. Leticia Castaneda, DDS"
+  ],
+  "address": "2702 S Buckner, Suite 110, Dallas, TX 75227",
+  "phone": "(469) 399-7773",
+  "hours": "Sat 10am-3pm (every other Saturday only). Closed Sun. Mon 2-7pm. Tue-Thu 11am-7pm. Fri 11am-6pm.",
+  "booking_note": "Sat 10am-3pm (every other Saturday only). Closed Sun. Mon 2-7pm. Tue-Thu 11am-7pm. Fri 11am-6pm.",
+  "services": [
+    "Pediatric & adult dentistry",
+    "Fillings & cleanings",
+    "Crowns, bridges & dentures",
+    "Root canals & extractions",
+    "Emergency care",
+    "Teeth whitening",
+    "Invisalign"
+  ],
+  "insurance_and_financing": [
+    "Medicaid",
+    "CHIP",
+    "Most PPO insurance",
+    "Aetna, MetLife, Delta Dental, BCBS, DentaQuest and more"
+  ],
+  "affiliations": [],
+  "social": {},
+  "system_prompt_extra": "If asked about emergencies, tell them to call (469) 399-7773 directly and still collect name and phone so the team can follow up. Be especially clear about hours since this practice has limited availability: Sat 10am-3pm (every other Saturday only). Closed Sun. Mon 2-7pm. Tue-Thu 11am-7pm. Fri 11am-6pm."
+}

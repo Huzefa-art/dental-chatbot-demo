@@ -1,0 +1,24 @@
+{
+  "slug": "bayfront_dental",
+  "practice_name": "Bayfront Dental",
+  "doctors": [
+    "Dr. Amber Gelinas, DMD"
+  ],
+  "address": "6475 Jordan Rd, Daphne, AL 36526",
+  "phone": "(251) 308-5800",
+  "hours": "Mon-Fri 8am-3pm only. Closed evenings and weekends entirely.",
+  "booking_note": "Mon-Fri 8am-3pm only. Closed evenings and weekends entirely.",
+  "services": [
+    "General dentistry",
+    "Cosmetic dentistry",
+    "Same-day appointments",
+    "In-house membership plan"
+  ],
+  "insurance_and_financing": [
+    "Dental insurance accepted",
+    "In-house membership plan for uninsured patients"
+  ],
+  "affiliations": [],
+  "social": {},
+  "system_prompt_extra": "If asked about emergencies, tell them to call (251) 308-5800 directly and still collect name and phone so the team can follow up. Be especially clear about hours since this practice has limited availability: Mon-Fri 8am-3pm only. Closed evenings and weekends entirely."
+}

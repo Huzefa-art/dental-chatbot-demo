@@ -1,0 +1,32 @@
+{
+  "slug": "cool_creek_family_dental",
+  "practice_name": "Cool Creek Family Dentistry",
+  "doctors": [
+    "Dr. Adam Kristoff, DDS",
+    "Dr. Nikita Mistry, BDS, DDS, AGD"
+  ],
+  "address": "6414 River Place Blvd, Suite 101, Austin, TX 78730",
+  "phone": "(512) 501-6022",
+  "hours": "Mon-Thu 7am-5pm. Friday by appointment only. Closed Sat & Sun.",
+  "booking_note": "Mon-Thu 7am-5pm. Friday by appointment only. Closed Sat & Sun.",
+  "services": [
+    "General/family dentistry",
+    "Cosmetic dentistry",
+    "Invisalign",
+    "Implants",
+    "Dentures",
+    "Oral surgery",
+    "Endodontics/root canal",
+    "Orthodontics",
+    "Pediatric",
+    "Sedation dentistry",
+    "Emergency dentistry"
+  ],
+  "insurance_and_financing": [
+    "CareCredit",
+    "In-house VIP membership plan for uninsured patients"
+  ],
+  "affiliations": [],
+  "social": {},
+  "system_prompt_extra": "If asked about emergencies, tell them to call (512) 501-6022 directly and still collect name and phone so the team can follow up. Be especially clear about hours since this practice has limited availability: Mon-Thu 7am-5pm. Friday by appointment only. Closed Sat & Sun."
+}

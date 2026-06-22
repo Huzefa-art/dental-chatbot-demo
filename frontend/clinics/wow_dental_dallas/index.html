@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WOW Dental — Virtual Assistant Preview</title>
+<script src="config.js"></script>
+<style>
+  :root {
+    /* Palette matched from dentaldefendershouston.com's real header/hero screenshots:
+       deep navy header + hero, bright red accent matching the shield logo. */
+    --green-dark: #A02050;
+    --green: #D6336C;
+    --green-light: #F2A8C4;
+    --green-pale: #FCE4ED;
+    --navy: #2B0B3F;
+    --navy-light: #421560;
+    --text: #484848;
+    --bg-light: #F2F2F2;
+    --white: #fff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: avenir, "Avenir Next", -apple-system, Arial, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    margin: 0;
+  }
+
+  /* ---------- preview banner ---------- */
+  #preview-banner {
+    background: #fffbe6;
+    color: #6b5400;
+    text-align: center;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-bottom: 1px solid #f0e0a0;
+  }
+
+  /* ---------- header (mirrors dentaldefendershouston.com header) ---------- */
+  header.site-header {
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--bg-light);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  header.site-header img.logo { height: 64px; }
+  header.site-header .logo-text { font-size: 22px; font-weight: 800; color: var(--white); letter-spacing: 0.3px; }
+  header.site-header .contact { text-align: right; font-size: 15px; line-height: 1.5; color: var(--white); }
+  header.site-header .contact a { color: var(--green); font-weight: 700; text-decoration: none; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 56px 32px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 36px; margin: 0 0 8px; color: var(--white); font-weight: 400; }
+  .hero h1 strong { color: var(--green); }
+  .hero p { font-size: 18px; max-width: 640px; margin: 0 auto 20px; color: var(--white); opacity: 0.9; }
+  .hero .info-pills { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .info-pills span {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+
+  /* ---------- footer ---------- */
+  footer.site-footer {
+    background: var(--navy);
+    color: var(--white);
+    text-align: center;
+    padding: 32px 16px;
+    margin-top: 40px;
+  }
+  footer.site-footer img { height: 48px; margin-bottom: 12px; }
+  footer.site-footer p { font-size: 13px; opacity: 0.8; margin: 4px 0; }
+
+  /* ---------- floating chat launcher ---------- */
+  #launcher {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  #launcher:hover { background: var(--green-dark); transform: scale(1.05); }
+  #launcher svg { width: 26px; height: 26px; fill: var(--white); }
+
+  #teaser {
+    position: fixed;
+    bottom: 90px;
+    right: 24px;
+    background: var(--white);
+    border: 1px solid var(--green-pale);
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    font-size: 13px;
+    color: var(--text);
+    max-width: 220px;
+    z-index: 999;
+  }
+
+  /* ---------- chat panel: compact floating overlay, not a sidebar ---------- */
+  #chat-box {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 560px;
+    max-height: calc(100vh - 48px);
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    z-index: 1001;
+  }
+  #chat-box.open { display: flex; }
+  #chat-header {
+    background: var(--green);
+    color: var(--white);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  #chat-header .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  #chat-header .title { font-weight: 700; font-size: 15px; }
+  #chat-header .sub { font-weight: 400; font-size: 12px; opacity: 0.9; }
+  #chat-close { margin-left: auto; background: none; border: none; color: var(--white); font-size: 22px; cursor: pointer; line-height: 1; padding: 4px; }
+
+  #messages { flex: 1; overflow-y: auto; padding: 16px; background: var(--bg-light); }
+  .msg { margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-end; }
+  .msg.user { flex-direction: row-reverse; }
+  .avatar-sm {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .msg.user .avatar-sm { background: var(--green-light); }
+  .bubble { display: inline-block; padding: 8px 12px; border-radius: 12px; max-width: 78%; line-height: 1.4; }
+  .user .bubble { background: var(--green); color: var(--white); }
+  .bot .bubble { background: var(--white); color: var(--text); border: 1px solid var(--green-pale); }
+
+  .typing-dots { display: inline-flex; gap: 3px; padding: 10px 12px; }
+  .typing-dots span {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--green-light);
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  #quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; background: var(--bg-light); flex-shrink: 0; }
+  .quick-reply {
+    background: var(--white);
+    border: 1px solid var(--green);
+    color: var(--green-dark);
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .quick-reply:hover { background: var(--green-pale); }
+
+  #input-row { display: flex; border-top: 1px solid var(--green-pale); flex-shrink: 0; }
+  #input-row input { flex: 1; border: none; padding: 12px; font-size: 14px; outline: none; min-width: 0; }
+  #input-row button { border: none; background: var(--green); color: var(--white); padding: 0 18px; cursor: pointer; font-weight: 700; flex-shrink: 0; }
+  #input-row button:hover { background: var(--green-dark); }
+
+  /* ---------- mobile: keep the widget usable on a phone screen, not full-bleed ---------- */
+  @media (max-width: 480px) {
+    #chat-box {
+      right: 12px;
+      left: 12px;
+      bottom: 12px;
+      width: auto;
+      max-width: none;
+      height: auto;
+      max-height: calc(100vh - 24px);
+    }
+    #launcher { right: 16px; bottom: 16px; }
+    #teaser { right: 16px; left: 16px; max-width: none; bottom: 84px; }
+    header.site-header { padding: 12px 16px; }
+    header.site-header .contact { text-align: left; font-size: 14px; }
+    .hero { padding: 36px 16px; }
+    .hero h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="preview-banner">
+  This is a live preview built for WOW Dental — not yet active on their site.
+</div>
+
+<header class="site-header">
+  <span class="logo-text">WOW Dental</span>
+  <div class="contact">
+    3704 W. Camp Wisdom Rd, Ste 120, Dallas, TX 75237<br>
+    <a href="tel:+19727094867">(972) 709-4867</a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Exceptional Care, <strong>Catered to You</strong></h1>
+  <p>A privately-owned, family dental practice in Dallas, TX. Have a question? Click the chat button in the corner — our virtual assistant can help with hours, insurance, and booking.</p>
+  <div class="info-pills">
+    <span>Tue/Thu only 1–5pm</span>
+    <span>Most PPO Insurance Accepted</span>
+    <span>Family, Pediatric & Cosmetic</span>
+  </div>
+</section>
+
+<footer class="site-footer">
+    <p>3704 W. Camp Wisdom Rd, Ste 120, Dallas, TX 75237 &middot; (972) 709-4867</p>
+  <p>Demo preview chatbot &mdash; not affiliated with or deployed on the live mywowdental.com site.</p>
+</footer>
+
+<div id="teaser">👋 Questions about appointments or hours? Chat with us!</div>
+
+<div id="launcher" onclick="openChat()">
+  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.36A9.93 9.93 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.1-.43-4.4-1.18l-.32-.18-3.07.82.82-3-.2-.33A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/></svg>
+</div>
+
+<div id="chat-box">
+  <div id="chat-header">
+    <div class="avatar">✨</div>
+    <div>
+      <div class="title">WOW Dental</div>
+      <div class="sub">Virtual Assistant</div>
+    </div>
+    <button id="chat-close" onclick="closeChat()">&times;</button>
+  </div>
+  <div id="messages"></div>
+  <div id="quick-replies">
+    <button class="quick-reply" onclick="sendQuick('I\'d like to book an appointment')">Book an Appointment</button>
+    <button class="quick-reply" onclick="sendQuick('What are your office hours?')">Office Hours</button>
+    <button class="quick-reply" onclick="sendQuick('What insurance and financing do you accept?')">Insurance &amp; Financing</button>
+    <button class="quick-reply" onclick="sendQuick('I\'m in pain, this is an emergency')">I'm in Pain — Emergency</button>
+  </div>
+  <div id="input-row">
+    <input id="input" type="text" placeholder="Type your message..." />
+    <button onclick="send()">Send</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = `${window.API_BASE_URL}/chat?clinic=${window.CLINIC_SLUG}`;
+  const sessionId = "demo-" + Math.random().toString(36).slice(2);
+  let history = [];
+  let chatOpened = false;
+  const messagesEl = document.getElementById("messages");
+  const inputEl = document.getElementById("input");
+  const chatBox = document.getElementById("chat-box");
+  const launcher = document.getElementById("launcher");
+  const teaser = document.getElementById("teaser");
+
+  function openChat() {
+    chatBox.classList.add("open");
+    teaser.style.display = "none";
+    launcher.style.display = "none";
+    if (!chatOpened) {
+      chatOpened = true;
+      addMsg("bot", "Hi! I'm the virtual assistant for WOW Dental. Ask me about hours, services, insurance, or to request an appointment.");
+    }
+    inputEl.focus();
+  }
+
+  function closeChat() {
+    chatBox.classList.remove("open");
+    launcher.style.display = "flex";
+  }
+
+  function addMsg(role, html) {
+    const wrap = document.createElement("div");
+    wrap.className = "msg " + (role === "user" ? "user" : "bot");
+    wrap.innerHTML = `<div class="avatar-sm">${role === "user" ? "You" : "✨"}</div><span class="bubble">${html}</span>`;
+    messagesEl.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return wrap;
+  }
+
+  function addTyping() {
+    const wrap = document.createElement("div");
+    wrap.className = "msg bot";
+    wrap.innerHTML = `<div class="avatar-sm">✨</div><span class="bubble typing-dots"><span></span><span></span><span></span></span>`;
+    messagesEl.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return wrap;
+  }
+
+  function sendQuick(text) {
+    openChat();
+    inputEl.value = text;
+    send();
+  }
+
+  async function send() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    addMsg("user", text);
+    inputEl.value = "";
+    history.push({ role: "user", content: text });
+
+    // Render free tier sleeps after 15 min idle -- the typing indicator covers
+    // the 30-60s cold-start delay so it doesn't look broken.
+    const typingNote = addTyping();
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, history: history.slice(0, -1), session_id: sessionId }),
+      });
+      const data = await res.json();
+      typingNote.remove();
+      addMsg("bot", data.reply || "(error: " + (data.detail || "unknown") + ")");
+      history.push({ role: "assistant", content: data.reply || "" });
+    } catch (err) {
+      typingNote.remove();
+      addMsg("bot", "Sorry, I couldn't reach the assistant just now. Please try again in a moment.");
+    }
+  }
+
+  inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+  setTimeout(() => { if (!chatOpened) teaser.style.display = "block"; }, 1200);
+</script>
+</body>
+</html>

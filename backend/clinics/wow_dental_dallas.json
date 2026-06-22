@@ -1,0 +1,29 @@
+{
+  "slug": "wow_dental_dallas",
+  "practice_name": "WOW Dental",
+  "doctors": [
+    "Dr. Saosat Stafford, DDS",
+    "Dr. Aniika Jackson-Smith, DDS"
+  ],
+  "address": "3704 W. Camp Wisdom Rd, Ste 120, Dallas, TX 75237",
+  "phone": "(972) 709-4867",
+  "hours": "Mon 11am-7pm. Tue/Thu 1-5pm only. Wed 9am-5pm. Fri 7am-1pm. Closed Sun, Sat by appointment only.",
+  "booking_note": "Mon 11am-7pm. Tue/Thu 1-5pm only. Wed 9am-5pm. Fri 7am-1pm. Closed Sun, Sat by appointment only.",
+  "services": [
+    "General dentistry",
+    "Cosmetic dentistry",
+    "Pediatric dentistry",
+    "Dental implants",
+    "Veneers",
+    "Orthodontics/braces",
+    "Emergency dentistry"
+  ],
+  "insurance_and_financing": [
+    "Most major PPO insurance plans",
+    "Credit cards",
+    "Payment plans"
+  ],
+  "affiliations": [],
+  "social": {},
+  "system_prompt_extra": "If asked about emergencies, tell them to call (972) 709-4867 directly and still collect name and phone so the team can follow up. Be especially clear about hours since this practice has limited availability: Mon 11am-7pm. Tue/Thu 1-5pm only. Wed 9am-5pm. Fri 7am-1pm. Closed Sun, Sat by appointment only."
+}
