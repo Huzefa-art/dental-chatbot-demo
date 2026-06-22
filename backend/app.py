@@ -23,6 +23,8 @@ Add a new clinic:
     Without Supabase (local/dev): drop a new <slug>.json file into clinics/.
 """
 
+import utils.transport
+import utils.session
 import json
 import os
 import uuid
